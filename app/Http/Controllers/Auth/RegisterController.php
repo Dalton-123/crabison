@@ -49,6 +49,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'gender' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -60,10 +61,21 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
-    {
+    protected function create(array $data){
+        if($data['gender']=='male'){
+            $pic_path = 'boy.png';
+        }
+        else
+        {
+            $pic_path = 'girl.png';
+        }
+
+
         return User::create([
             'name' => $data['name'],
+            'gender' => $data['gender'],
+            'pic' => $pic_path,
+            'slug' => str_slug($data['name'], '-'),
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
